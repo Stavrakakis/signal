@@ -1,0 +1,15 @@
+.reaction {
+    background-color: #fff;
+}
+
+.fadeOut {
+    /* animation: cssAnimation 0.5s ease-in 5s forwards;
+    animation-fill-mode: forwards; */
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
