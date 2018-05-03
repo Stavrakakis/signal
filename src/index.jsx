@@ -7,6 +7,8 @@ import ReactDOM from "react-dom";
 import AppContainer from "./components/AppContainer/AppContainer.jsx";
 import ReactionList from "./ReactionList.js";
 import ReactionItem from "./ReactionItem.js";
+import ReactionButton from "./ReactionButton";
+import User from "./User";
 
 var config = {
   apiKey: "AIzaSyBVYw8O4NuxMRz63Jr9jmPyie3JF-x5x6M",
@@ -33,20 +35,13 @@ function setup(roomId, reactionList) {
     .collection("reactions")
     .where("room", "==", roomId)
     .orderBy("timestamp", "desc")
-    .limit(20)
     .onSnapshot(function(querySnapshot) {
-      if (i == 0) {
-        i++;
-        return;
-      }
-
-      querySnapshot.docChanges.forEach(function(change) {
-        if (change.type === "added") {
-          let d = change.doc.data();
-          reactionList.reactions.push(
-            new ReactionItem(change.doc.id, d.type, d.room, d.active)
-          );
-        }
+      reactionList.reactions = [];
+      querySnapshot.forEach(function(doc) {
+        let d = doc.data();
+        reactionList.reactions.push(
+          new ReactionItem(doc.id, d.type, d.room, d.active)
+        );
       });
     });
 }
@@ -62,10 +57,38 @@ document.body.append(saleIdDiv);
 
 var reactionList = new ReactionList();
 reactionList.reactions = [];
+reactionList.buttons.push(new ReactionButton("1", "pan_tool", false));
+reactionList.buttons.push(new ReactionButton("2", "thumb_up", false));
+reactionList.buttons.push(new ReactionButton("3", "thumb_down", false));
+reactionList.buttons.push(new ReactionButton("4", "access_time", false));
 
-ReactDOM.render(
-  <AppContainer reactions={reactionList} />,
-  document.getElementById("meeting-plugin")
-);
+var provider = new firebase.auth.GoogleAuthProvider();
 
-setup("yde-zkhm-yza", reactionList);
+provider.addScope("email");
+
+firebase
+  .auth()
+  .signInWithPopup(provider)
+  .then(function(result) {
+    var user = new User();
+    
+    user.email = result.user.email;
+    user.photoUrl = result.user.photoURL;
+
+    ReactDOM.render(
+      <AppContainer room="yde-zkhm-yza" user={user} reactions={reactionList} />,
+      document.getElementById("meeting-plugin")
+    );
+
+    setup("yde-zkhm-yza", reactionList);
+  })
+  .catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });

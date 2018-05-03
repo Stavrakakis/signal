@@ -15,15 +15,17 @@ class AppContainer extends Component {
   }
 
   render() {
-    let panToolActive =
-      this.props.reactions.reactions.filter(r => r.type === "pan_tool").length >
-      0;
-
     return (
       <div style={{ position: "fixed" }}>
-        <ReactionButton user="" room="yde-zkhm-yza" type="pan_tool" active={panToolActive}/>
-        <ReactionButton user="" room="yde-zkhm-yza" type="thumb_up" />
-        <ReactionButton user="" room="yde-zkhm-yza" type="schedule" />
+        {this.props.reactions.buttons.map(button => (
+          <ReactionButton
+            key={button.type}
+            user={this.props.user}
+            room={this.props.room}
+            button={button}
+          />
+        ))}
+
         <div style={{ position: "fixed", left: "50vw", bottom: 88 }}>
           {this.props.reactions.reactions.map(reaction => (
             <Reaction key={reaction.id} reaction={reaction} />
