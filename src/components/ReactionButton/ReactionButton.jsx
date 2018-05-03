@@ -66,6 +66,7 @@ class ReactionButton extends Component {
 
     return (
       <div onClick={this.handleClick} className={className}>
+        <div className={styles.hoverPanel}></div>
         <span className="material-icons">{this.props.button.type}</span>
       </div>
     );

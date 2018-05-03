@@ -1,15 +1,31 @@
 .reaction {
-    background-color: silver;
+  composes: iconFont from "../../styles/global.css";
+  z-index: 100000000;
+  display: flex;
+}
+.signal {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 50% 50% 0;
+  text-align: center;
+  width: 56px;
+  height: 56px;
+}
+.photo {
+  width: 56px;
+  height: 56px;
 }
 
 .fadeOut {
-    animation: cssAnimation 0.5s ease-in 5s forwards;
-    animation-fill-mode: forwards;
+  animation: cssAnimation 0.5s ease-in 5s forwards;
+  animation-fill-mode: forwards;
 }
 @keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-    }
+  to {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
 }

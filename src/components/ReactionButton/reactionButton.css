@@ -1,30 +1,6 @@
-/* fallback */
-@font-face {
-  font-family: "Material Icons";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Material Icons"), local("MaterialIcons-Regular"),
-    url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2)
-      format("woff2");
-}
-
-.material-icons {
-  font-family: "Material Icons";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: "liga";
-  -webkit-font-smoothing: antialiased;
-}
-
 .reactionButton {
+  composes: iconFont from "../../styles/global.css";
+
   color: #333;
   width: 56px;
   height: 56px;
@@ -33,19 +9,36 @@
   font-family: "Material Icons";
   font-style: normal;
   font-size: 24px;
-  background-color: #fff;
-  text-align: center;
   z-index: 100000000;
+  text-align: center;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 50%;
   margin: 8px 16px;
+  position: relative;
+  -webkit-transition: all 0.25s linear;
 }
 
-.reactionButton:hover {
-  background-color: silver;
+.hoverPanel {
+  display: none;
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 1, 1),
+    transform 250ms cubic-bezier(0.4, 0, 1, 1);
+  border-radius: 50%;
+}
+
+.reactionButton:hover .hoverPanel {
+  background-color: rgba(0, 0, 0, 0.12);
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 .active {

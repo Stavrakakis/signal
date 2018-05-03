@@ -25,10 +25,23 @@ var db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
-function setup(roomId, reactionList) {
+function setup(email, roomId, reactionList) {
   const roomName = window.location.pathname.substring(1);
 
   let i = 0;
+  let batch = db.batch();
+
+  db
+    .collection("reactions")
+    .where("user", "==", email)
+    .get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        batch.delete(doc.ref);
+      });
+    }).then(() => {
+      batch.commit();
+    });
 
   // setup listeners on reaction list
   db
@@ -40,7 +53,7 @@ function setup(roomId, reactionList) {
       querySnapshot.forEach(function(doc) {
         let d = doc.data();
         reactionList.reactions.push(
-          new ReactionItem(doc.id, d.type, d.room, d.active)
+          new ReactionItem(doc.id, d.type, d.room, d.photoUrl, d.email)
         );
       });
     });
@@ -71,7 +84,7 @@ firebase
   .signInWithPopup(provider)
   .then(function(result) {
     var user = new User();
-    
+
     user.email = result.user.email;
     user.photoUrl = result.user.photoURL;
 
@@ -80,7 +93,7 @@ firebase
       document.getElementById("meeting-plugin")
     );
 
-    setup("yde-zkhm-yza", reactionList);
+    setup(user.email, "yde-zkhm-yza", reactionList);
   })
   .catch(function(error) {
     // Handle Errors here.

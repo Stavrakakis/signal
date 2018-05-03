@@ -5,13 +5,15 @@ class ReactionItem {
   @observable name = "";
   @observable room = "";
   @observable type = "";
-  @observable active = false;
+  @observable photoUrl = "";
+  @observable email = "";
 
-  constructor(id, type, room, active) {
+  constructor(id, type, room, photoUrl, email) {
     this.id = id;
     this.room = room;
     this.type = type;
-    this.active = active;
+    this.email = email;
+    this.photoUrl = photoUrl;
   }
 }
 
