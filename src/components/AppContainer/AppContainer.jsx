@@ -26,7 +26,7 @@ class AppContainer extends Component {
           />
         ))}
 
-        <div style={{ position: "fixed", left: "50vw", bottom: 88 }}>
+        <div style={{ position: "fixed", left: "16px", bottom: 88 }}>
           {this.props.reactions.reactions.map(reaction => (
             <Reaction key={reaction.id} reaction={reaction} />
           ))}

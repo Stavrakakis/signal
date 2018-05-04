@@ -25,23 +25,35 @@ var db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 
-function setup(email, roomId, reactionList) {
-  const roomName = window.location.pathname.substring(1);
+// window.addEventListener("beforeunload", function (e) {
+//   var confirmationMessage = "\o/";
 
-  let i = 0;
+//   (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+//   return confirmationMessage;                            //Webkit, Safari, Chrome
+// });
+
+function deleteUserSignals(email, roomId) {
   let batch = db.batch();
 
   db
     .collection("reactions")
     .where("user", "==", email)
+    .where("room", "==", roomId)
     .get()
     .then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
         batch.delete(doc.ref);
       });
-    }).then(() => {
+    })
+    .then(() => {
       batch.commit();
     });
+}
+function setup(email, roomId, reactionList) {
+
+  let i = 0;
+
+  deleteUserSignals(email, roomId);
 
   // setup listeners on reaction list
   db
@@ -79,6 +91,14 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 provider.addScope("email");
 
+let host = window.location.host;
+let room =
+  host === "meet.google.com"
+    ? window.location.pathname.substring(1)
+    : host === "hangouts.google.com"
+      ? window.location.pathname.split("/").reverse()[0]
+      : "general";
+
 firebase
   .auth()
   .signInWithPopup(provider)
@@ -89,11 +109,11 @@ firebase
     user.photoUrl = result.user.photoURL;
 
     ReactDOM.render(
-      <AppContainer room="yde-zkhm-yza" user={user} reactions={reactionList} />,
+      <AppContainer room={room} user={user} reactions={reactionList} />,
       document.getElementById("meeting-plugin")
     );
 
-    setup(user.email, "yde-zkhm-yza", reactionList);
+    setup(user.email, room, reactionList);
   })
   .catch(function(error) {
     // Handle Errors here.

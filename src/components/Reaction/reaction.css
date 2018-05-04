@@ -1,17 +1,18 @@
 .reaction {
   composes: iconFont from "../../styles/global.css";
   z-index: 100000000;
-  display: flex;
+  display: inline-block;    
 }
 .signal {
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0 50% 50% 0;
   text-align: center;
   width: 56px;
   height: 56px;
+  border-radius: 50% 50% 0 0;
+  overflow: hidden;
 }
 .photo {
   width: 56px;
