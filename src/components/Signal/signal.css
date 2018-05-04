@@ -1,11 +1,11 @@
-.reaction {
+.signal {
   composes: iconFont from "../../styles/global.css";
   z-index: 100000000;
-  display: inline-block;   
+  display: inline-block;
   margin-right: 8px;
   animation-duration: 0.1s !important;
 }
-.signal {
+.signalIcon {
   background-color: #fff;
   display: flex;
   align-items: center;

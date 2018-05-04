@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 
-class ReactionItem {
+class UserSignal {
   id = "";
   @observable name = "";
   @observable room = "";
@@ -17,4 +17,4 @@ class ReactionItem {
   }
 }
 
-export default ReactionItem;
+export default UserSignal;

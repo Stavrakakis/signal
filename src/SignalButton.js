@@ -1,6 +1,6 @@
 import { observable } from "mobx";
 
-class ReactionButton {
+class SignalButton {
   id = "";
   @observable type = "";
   @observable active = false;
@@ -14,4 +14,4 @@ class ReactionButton {
   }
 }
 
-export default ReactionButton;
+export default SignalButton;

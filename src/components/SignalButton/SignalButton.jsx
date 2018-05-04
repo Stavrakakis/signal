@@ -1,4 +1,4 @@
-import styles from "./reactionButton.css";
+import styles from "./signalButton.css";
 import classNames from "classnames/bind";
 import React, { Component } from "react";
 
@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import animations from "animate.css";
 
 @observer
-class ReactionButton extends Component {
+class SignalButton extends Component {
   constructor(props) {
     super(props);
   }
@@ -62,7 +62,7 @@ class ReactionButton extends Component {
     let cx = classNames.bind(styles);
 
     let className = cx({
-      reactionButton: true,
+      signalButton: true,
       active: this.props.button.active
     });
 
@@ -80,4 +80,4 @@ class ReactionButton extends Component {
   }
 }
 
-export default ReactionButton;
+export default SignalButton;

@@ -1,4 +1,4 @@
-.reactionButton {
+.signalButton {
   composes: iconFont from "../../styles/global.css";
 
   color: #333;

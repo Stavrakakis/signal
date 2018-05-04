@@ -5,9 +5,10 @@ import "@firebase/firestore";
 import React from "react";
 import ReactDOM from "react-dom";
 import AppContainer from "./components/AppContainer/AppContainer.jsx";
-import ReactionList from "./ReactionList.js";
-import ReactionItem from "./ReactionItem.js";
-import ReactionButton from "./ReactionButton";
+import SignalList from "./SignalList.js";
+import SignalButtonList from "./SignalButtonList.js";
+import SignalButton from "./SignalButton";
+import UserSignal from "./UserSignal.js";
 import User from "./User";
 
 var config = {
@@ -49,9 +50,9 @@ function deleteUserSignals(email, roomId) {
       batch.commit();
     });
 }
-function setup(email, roomId, reactionList) {
+function setup(email, roomId, signalList) {
   let i = 0;
-  reactionList.reactions = [];
+  signalList.signals = [];
 
   // setup listeners on reaction list
   db
@@ -63,16 +64,16 @@ function setup(email, roomId, reactionList) {
         let doc = change.doc;
         let d = change.doc.data();
         if (change.type === "added") {
-          reactionList.reactions.push(
-            new ReactionItem(doc.id, d.type, d.room, d.photoUrl, d.email)
+          signalList.signals.push(
+            new UserSignal(doc.id, d.type, d.room, d.photoUrl, d.email)
           );
         }
         if (change.type === "removed") {
-          var remove = reactionList.reactions.filter((r) => {
+          var remove = signalList.signals.filter(r => {
             return r.id === doc.id;
           });
-          remove.forEach((r) => {
-            reactionList.reactions.remove(r);
+          remove.forEach(r => {
+            signalList.signals.remove(r);
           });
         }
       });
@@ -88,12 +89,15 @@ saleIdDiv.style.zIndex = "1000";
 // debugger;
 document.body.append(saleIdDiv);
 
-var reactionList = new ReactionList();
-reactionList.reactions = [];
-reactionList.buttons.push(new ReactionButton("1", "pan_tool", false));
-reactionList.buttons.push(new ReactionButton("2", "thumb_up", false));
-reactionList.buttons.push(new ReactionButton("3", "thumb_down", false));
-reactionList.buttons.push(new ReactionButton("4", "access_time", false));
+var signalList = new SignalList();
+var buttonList = new SignalButtonList();
+
+signalList.signals = [];
+
+buttonList.buttons.push(new SignalButton("1", "pan_tool", false));
+buttonList.buttons.push(new SignalButton("2", "thumb_up", false));
+buttonList.buttons.push(new SignalButton("3", "thumb_down", false));
+buttonList.buttons.push(new SignalButton("4", "access_time", false));
 
 var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -118,11 +122,11 @@ firebase
 
     deleteUserSignals(user.email, room).then(() => {
       ReactDOM.render(
-        <AppContainer room={room} user={user} reactions={reactionList} />,
+        <AppContainer room={room} user={user} buttons={buttonList.buttons} signalList={signalList} />,
         document.getElementById("meeting-plugin")
       );
 
-      setup(user.email, room, reactionList);
+      setup(user.email, room, signalList);
     });
   })
   .catch(function(error) {

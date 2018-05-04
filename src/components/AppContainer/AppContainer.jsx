@@ -1,8 +1,8 @@
 import styles from "./appContainer.css";
 import classNames from "classnames";
 import React, { Component } from "react";
-import Reaction from "../Reaction/Reaction.jsx";
-import ReactionButton from "../ReactionButton/ReactionButton.jsx";
+import Signal from "../Signal/Signal.jsx";
+import SignalButton from "../SignalButton/SignalButton.jsx";
 
 import * as firebase from "firebase";
 
@@ -17,8 +17,8 @@ class AppContainer extends Component {
   render() {
     return (
       <div style={{ position: "fixed", top: 0, left: 0 }}>
-        {this.props.reactions.buttons.map(button => (
-          <ReactionButton
+        {this.props.buttons.map(button => (
+          <SignalButton
             key={button.type}
             user={this.props.user}
             room={this.props.room}
@@ -27,8 +27,8 @@ class AppContainer extends Component {
         ))}
 
         <div style={{ position: "fixed", left: "16px", bottom: 88 }}>
-          {this.props.reactions.reactions.map(reaction => (
-            <Reaction key={reaction.id} reaction={reaction} />
+          {this.props.signalList.signals.map(signal => (
+            <Signal key={signal.id} signal={signal} />
           ))}
         </div>
       </div>
