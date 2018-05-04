@@ -16,7 +16,7 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <div style={{ position: "fixed" }}>
+      <div style={{ position: "fixed", top: 0, left: 0 }}>
         {this.props.reactions.buttons.map(button => (
           <ReactionButton
             key={button.type}

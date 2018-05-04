@@ -3,6 +3,7 @@
   z-index: 100000000;
   display: inline-block;   
   margin-right: 8px;
+  animation-duration: 0.1s !important;
 }
 .signal {
   background-color: #fff;

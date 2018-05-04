@@ -127,6 +127,7 @@ firebase
   })
   .catch(function(error) {
     // Handle Errors here.
+    console.log(error);
     var errorCode = error.code;
     var errorMessage = error.message;
     // The email of the user's account used.

@@ -1,14 +1,20 @@
 var path = require("path");
 var webpack = require("webpack");
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
   devtool: "source-map",
-  entry: ["webpack-dev-server/client?http://localhost:3000", "./src/index.jsx"],
+  entry: ["./src/index.jsx"],
   output: {
     path: path.join(__dirname, "dist"),
-    filename: "bundle.js",
-    publicPath: "/build/"
+    filename: "bundle.js"
   },
+  plugins: [
+    new UglifyJSPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("production")
+    })
+  ],
   module: {
     loaders: [
       {
