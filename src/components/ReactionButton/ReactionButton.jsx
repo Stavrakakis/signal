@@ -5,6 +5,8 @@ import React, { Component } from "react";
 import * as firebase from "firebase";
 import { observer } from "mobx-react";
 
+import animations from "animate.css";
+
 @observer
 class ReactionButton extends Component {
   constructor(props) {
@@ -65,8 +67,13 @@ class ReactionButton extends Component {
     });
 
     return (
-      <div onClick={this.handleClick} className={className}>
-        <div className={styles.hoverPanel}></div>
+      <div
+        onClick={this.handleClick}
+        className={
+          className + ` ${animations.slideInLeft} ${animations.animated}`
+        }
+      >
+        <div className={styles.hoverPanel} />
         <span className="material-icons">{this.props.button.type}</span>
       </div>
     );

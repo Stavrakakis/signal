@@ -35,7 +35,7 @@ db.settings(settings);
 function deleteUserSignals(email, roomId) {
   let batch = db.batch();
 
-  db
+  return db
     .collection("reactions")
     .where("user", "==", email)
     .where("room", "==", roomId)
@@ -50,10 +50,8 @@ function deleteUserSignals(email, roomId) {
     });
 }
 function setup(email, roomId, reactionList) {
-
   let i = 0;
-
-  deleteUserSignals(email, roomId);
+  reactionList.reactions = [];
 
   // setup listeners on reaction list
   db
@@ -61,12 +59,22 @@ function setup(email, roomId, reactionList) {
     .where("room", "==", roomId)
     .orderBy("timestamp", "desc")
     .onSnapshot(function(querySnapshot) {
-      reactionList.reactions = [];
-      querySnapshot.forEach(function(doc) {
-        let d = doc.data();
-        reactionList.reactions.push(
-          new ReactionItem(doc.id, d.type, d.room, d.photoUrl, d.email)
-        );
+      querySnapshot.docChanges.forEach(function(change) {
+        let doc = change.doc;
+        let d = change.doc.data();
+        if (change.type === "added") {
+          reactionList.reactions.push(
+            new ReactionItem(doc.id, d.type, d.room, d.photoUrl, d.email)
+          );
+        }
+        if (change.type === "removed") {
+          var remove = reactionList.reactions.filter((r) => {
+            return r.id === doc.id;
+          });
+          remove.forEach((r) => {
+            reactionList.reactions.remove(r);
+          });
+        }
       });
     });
 }
@@ -108,12 +116,14 @@ firebase
     user.email = result.user.email;
     user.photoUrl = result.user.photoURL;
 
-    ReactDOM.render(
-      <AppContainer room={room} user={user} reactions={reactionList} />,
-      document.getElementById("meeting-plugin")
-    );
+    deleteUserSignals(user.email, room).then(() => {
+      ReactDOM.render(
+        <AppContainer room={room} user={user} reactions={reactionList} />,
+        document.getElementById("meeting-plugin")
+      );
 
-    setup(user.email, room, reactionList);
+      setup(user.email, room, reactionList);
+    });
   })
   .catch(function(error) {
     // Handle Errors here.

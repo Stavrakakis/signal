@@ -41,6 +41,7 @@
     "webpack-material-design-icons": "^0.1.0"
   },
   "dependencies": {
+    "animate.css": "^3.6.1",
     "babel-loader": "^7.0.0",
     "classnames": "^2.2.5",
     "firebase": "^4.13.1",

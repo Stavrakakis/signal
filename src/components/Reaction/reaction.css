@@ -1,7 +1,8 @@
 .reaction {
   composes: iconFont from "../../styles/global.css";
   z-index: 100000000;
-  display: inline-block;    
+  display: inline-block;   
+  margin-right: 8px;
 }
 .signal {
   background-color: #fff;
@@ -17,16 +18,5 @@
 .photo {
   width: 56px;
   height: 56px;
-}
-
-.fadeOut {
-  animation: cssAnimation 0.5s ease-in 5s forwards;
-  animation-fill-mode: forwards;
-}
-@keyframes cssAnimation {
-  to {
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
+  border-radius: 0 0 50% 50%;
 }
