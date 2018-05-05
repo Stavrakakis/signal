@@ -99,10 +99,6 @@ buttonList.buttons.push(new SignalButton("2", "thumb_up", false));
 buttonList.buttons.push(new SignalButton("3", "thumb_down", false));
 buttonList.buttons.push(new SignalButton("4", "access_time", false));
 
-var provider = new firebase.auth.GoogleAuthProvider();
-
-provider.addScope("email");
-
 let host = window.location.host;
 let room =
   host === "meet.google.com"
@@ -111,32 +107,66 @@ let room =
       ? window.location.pathname.split("/").reverse()[0]
       : "general";
 
-firebase
-  .auth()
-  .signInWithPopup(provider)
-  .then(function(result) {
-    var user = new User();
+var provider = new firebase.auth.GoogleAuthProvider();
 
-    user.email = result.user.email;
-    user.photoUrl = result.user.photoURL;
+provider.addScope("email");
 
-    deleteUserSignals(user.email, room).then(() => {
-      ReactDOM.render(
-        <AppContainer room={room} user={user} buttons={buttonList.buttons} signalList={signalList} />,
-        document.getElementById("meeting-plugin")
-      );
+if (localStorage.getItem("currentMeetUser")) {
+  let u = JSON.parse(localStorage.currentMeetUser);
+  let email = u.email;
+  let photoUrl = u.photoUrl;
+  deleteUserSignals(email, room).then(() => {
+    ReactDOM.render(
+      <AppContainer
+        room={room}
+        user={u}
+        buttons={buttonList.buttons}
+        signalList={signalList}
+      />,
+      document.getElementById("meeting-plugin")
+    );
 
-      setup(user.email, room, signalList);
-    });
-  })
-  .catch(function(error) {
-    // Handle Errors here.
-    console.log(error);
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-    // ...
+    setup(email, room, signalList);
   });
+} else {
+  firebase
+    .auth()
+    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          var user = new User();
+          user.email = result.user.email;
+          user.photoUrl = result.user.photoURL;
+
+          localStorage.setItem("currentMeetUser", JSON.stringify(user));
+
+          deleteUserSignals(user.email, room).then(() => {
+            ReactDOM.render(
+              <AppContainer
+                room={room}
+                user={user}
+                buttons={buttonList.buttons}
+                signalList={signalList}
+              />,
+              document.getElementById("meeting-plugin")
+            );
+
+            setup(user.email, room, signalList);
+          });
+        })
+        .catch(function(error) {
+          // Handle Errors here.
+          console.log(error);
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+    });
+}
