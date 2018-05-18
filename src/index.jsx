@@ -148,6 +148,7 @@ let room =
 var provider = new firebase.auth.GoogleAuthProvider();
 
 provider.addScope("email");
+provider.addScope("https://www.googleapis.com/auth/calendar.readonly");
 
 if (localStorage.getItem("currentMeetUser")) {
   let user = JSON.parse(localStorage.currentMeetUser);
