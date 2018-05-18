@@ -1,21 +1,17 @@
 {
-    "name": "Injecta",
-    "version": "0.0.1",
-    "manifest_version": 2,
-    "description": "Injecting stuff",
-    "homepage_url": "http://danharper.me",
-    "background": {
-      "scripts": [
-        "background.js"
-      ],
-      "persistent": true
-    },
-    "browser_action": {
-      "default_title": "Inject!"
-    },
-    "permissions": [
-      "https://*/*",
-      "http://*/*",
-      "tabs"
-    ]
-  }
+  "name": "Signal",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Signal",
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "homepage_url": "https://github.com/Stavrakakis/signal",
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["inject.js"]
+    }
+  ]
+}

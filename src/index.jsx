@@ -16,14 +16,7 @@ var config = {
   databaseURL: "https://meet-f3f8c.firebaseio.com",
   projectId: "meet-f3f8c",
   storageBucket: "",
-  messagingSenderId: "465362118588",
-
-  clientId:
-    "992715321827-7grtdl47sd1jp3jk7kqtlhbgj3ohi4l3.apps.googleusercontent.com",
-  scopes: ["email", "profile", "https://www.googleapis.com/auth/calendar"],
-  discoveryDocs: [
-    "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"
-  ]
+  messagingSenderId: "465362118588"
 };
 
 firebase.initializeApp(config);
@@ -148,7 +141,6 @@ let room =
 var provider = new firebase.auth.GoogleAuthProvider();
 
 provider.addScope("email");
-provider.addScope("https://www.googleapis.com/auth/calendar.readonly");
 
 if (localStorage.getItem("currentMeetUser")) {
   let user = JSON.parse(localStorage.currentMeetUser);
