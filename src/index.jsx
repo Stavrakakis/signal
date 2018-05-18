@@ -7,6 +7,7 @@ import AppContainer from "./components/AppContainer/AppContainer.jsx";
 import SignalList from "./SignalList.js";
 import SignalButtonList from "./SignalButtonList.js";
 import SignalButton from "./SignalButton";
+import SignalButtonService from "./SignalButtonService";
 import UserSignal from "./UserSignal.js";
 import User from "./User";
 
@@ -24,13 +25,6 @@ firebase.initializeApp(config);
 var db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
-
-// window.addEventListener("beforeunload", function (e) {
-//   var confirmationMessage = "\o/";
-
-//   (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-//   return confirmationMessage;                            //Webkit, Safari, Chrome
-// });
 
 function deleteUserSignals(email, roomId) {
   let batch = db.batch();
@@ -94,95 +88,74 @@ function createContainer(id) {
   return div;
 }
 
-function generateRandomId() {
-  return Math.random()
-    .toString(36)
-    .substring(4);
-}
-
 function render(room, user, buttonList, signalList, container) {
   document.body.append(container);
   ReactDOM.render(
     <AppContainer
       room={room}
       user={user}
-      onSignOut={window.signOut}
+      onSignOut={signOut}
       buttons={buttonList.buttons}
       signalList={signalList}
     />,
     container
   );
 }
+function signInWithGoogle() {
+  var provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope("email");
 
-window.signOut = signOut;
-
-var id = "meeting-plugin";
-
-var container = createContainer(id);
-
-var signalList = new SignalList();
-var buttonList = new SignalButtonList();
-
-signalList.signals = [];
-
-buttonList.buttons.push(new SignalButton("1", "pan_tool", false));
-buttonList.buttons.push(new SignalButton("2", "thumb_up", false));
-buttonList.buttons.push(new SignalButton("3", "thumb_down", false));
-buttonList.buttons.push(new SignalButton("4", "access_time", false));
-
-let host = window.location.host;
-let room =
-  host === "meet.google.com"
-    ? window.location.pathname.substring(1)
-    : host === "hangouts.google.com"
-      ? window.location.pathname.split("/").reverse()[0]
-      : "general";
-
-var provider = new firebase.auth.GoogleAuthProvider();
-
-provider.addScope("email");
-
-if (localStorage.getItem("currentMeetUser")) {
-  let user = JSON.parse(localStorage.currentMeetUser);
-  let email = user.email;
-  let photoUrl = user.photoUrl;
-
-  deleteUserSignals(email, room).then(() => {
-    render(room, user, buttonList, signalList, container);
-
-    setup(email, room, signalList);
-  });
-} else {
-  firebase
+  return firebase
     .auth()
     .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(() => {
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(function(result) {
-          var user = new User();
-          user.email = result.user.email;
-          user.photoUrl = result.user.photoURL;
-
-          localStorage.setItem("currentMeetUser", JSON.stringify(user));
-
-          deleteUserSignals(user.email, room).then(() => {
-            render(room, user, buttonList, signalList, container);
-
-            setup(user.email, room, signalList);
-          });
-        })
-        .catch(function(error) {
-          // Handle Errors here.
-          console.log(error);
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
+      return firebase.auth().signInWithPopup(provider);
     });
 }
+
+function getUser() {
+  if (localStorage.getItem("currentMeetUser")) {
+    let user = JSON.parse(localStorage.currentMeetUser);
+    return new Promise((resolve, reject) => resolve(user));
+  } else {
+    return signInWithGoogle().then(function(result) {
+      var user = new User();
+      user.email = result.user.email;
+      user.photoUrl = result.user.photoURL;
+      localStorage.setItem("currentMeetUser", JSON.stringify(user));
+      return user;
+    });
+  }
+}
+
+(function() {
+
+  let host = window.location.host;
+  let room =
+    host === "meet.google.com"
+      ? window.location.pathname.substring(1)
+      : host === "hangouts.google.com"
+        ? window.location.pathname.split("/").reverse()[0]
+        : "general";
+
+  let user = null;
+
+  const id = "meeting-plugin";
+  
+  let container = createContainer(id);
+  
+  let signalList = new SignalList();
+  let buttonList = new SignalButtonList();
+  
+  buttonList.buttons = new SignalButtonService().getSignalButtons();
+
+  getUser()
+    .then(u => {
+      user = u;
+      deleteUserSignals(user.email, room);
+    })
+    .then(() => {
+      render(room, user, buttonList, signalList, container);
+      setup(user.email, room, signalList);
+    });
+})();
