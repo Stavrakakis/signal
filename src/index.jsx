@@ -176,16 +176,6 @@ if (localStorage.getItem("currentMeetUser")) {
           localStorage.setItem("currentMeetUser", JSON.stringify(user));
 
           deleteUserSignals(user.email, room).then(() => {
-            ReactDOM.render(
-              <AppContainer
-                room={room}
-                user={user}
-                signOut={window.signOut}
-                buttons={buttonList.buttons}
-                signalList={signalList}
-              />,
-              container
-            );
             render(room, user, buttonList, signalList, container);
 
             setup(user.email, room, signalList);
