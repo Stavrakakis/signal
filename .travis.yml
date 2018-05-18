@@ -13,5 +13,6 @@ deploy:
   local-dir: dist
   upload-dir: meeting-app
   acl: public_read
+  skip_cleanup: true
   on:
     repo: Stavrakakis/signal
