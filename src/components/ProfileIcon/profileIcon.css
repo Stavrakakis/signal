@@ -1,0 +1,38 @@
+.profileIcon {
+  composes: iconFont from "../../styles/global.css";
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.photo {
+
+  background-color: #fff;
+  border: solid 1px silver;
+
+  margin: 8px 16px;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+}
+
+.userPanel {
+
+  background-color: #fff;
+  border: solid 1px silver;
+
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  display: none;
+  font-family: "Material Icons";
+  font-style: normal;
+  font-size: 24px;
+}
+.profileIcon:hover .userPanel {
+  display: flex;
+}

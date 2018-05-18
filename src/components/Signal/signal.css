@@ -13,11 +13,11 @@
   text-align: center;
   width: 56px;
   height: 56px;
-  border-radius: 50% 50% 0 0;
+  border-radius: 5% 5% 0 0;
   overflow: hidden;
 }
 .photo {
   width: 56px;
   height: 56px;
-  border-radius: 0 0 50% 50%;
+  border-radius: 0 0 5% 5%;
 }

@@ -1,6 +1,5 @@
 import * as firebase from "firebase";
 import "@firebase/firestore";
-
 // Render the top-level React component
 import React from "react";
 import ReactDOM from "react-dom";
@@ -80,14 +79,46 @@ function setup(email, roomId, signalList) {
     });
 }
 
-var saleIdDiv = document.createElement("div");
-saleIdDiv.id = "meeting-plugin";
-saleIdDiv.style.fontFamily = "'Open Sans', Sans-serif";
-saleIdDiv.style.fontSize = "18px";
-saleIdDiv.style.zIndex = "1000";
+function signOut() {
+  var element = document.getElementById("meeting-plugin");
+  console.log("sign out and remove react from page");
+  localStorage.removeItem("currentMeetUser");
+  ReactDOM.unmountComponentAtNode(element);
+  element.remove();
+}
 
-// debugger;
-document.body.append(saleIdDiv);
+function createContainer(id) {
+  var div = document.createElement("div");
+  div.id = id;
+  div.style.zIndex = "9999999";
+  return div;
+}
+
+function generateRandomId() {
+  return Math.random()
+    .toString(36)
+    .substring(4);
+}
+
+function render(room, user, buttonList, signalList, container) {
+  document.body.append(container);
+  ReactDOM.render(
+    <AppContainer
+      room={room}
+      user={user}
+      onSignOut={window.signOut}
+      buttons={buttonList.buttons}
+      signalList={signalList}
+    />,
+    container
+  );
+}
+
+window.signOut = signOut;
+
+var id = "meeting-plugin";
+
+var container = createContainer(id);
 
 var signalList = new SignalList();
 var buttonList = new SignalButtonList();
@@ -112,19 +143,13 @@ var provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope("email");
 
 if (localStorage.getItem("currentMeetUser")) {
-  let u = JSON.parse(localStorage.currentMeetUser);
-  let email = u.email;
-  let photoUrl = u.photoUrl;
+  let user = JSON.parse(localStorage.currentMeetUser);
+  let email = user.email;
+  let photoUrl = user.photoUrl;
+
   deleteUserSignals(email, room).then(() => {
-    ReactDOM.render(
-      <AppContainer
-        room={room}
-        user={u}
-        buttons={buttonList.buttons}
-        signalList={signalList}
-      />,
-      document.getElementById("meeting-plugin")
-    );
+
+    render(room, user, buttonList, signalList, container);
 
     setup(email, room, signalList);
   });
@@ -148,11 +173,13 @@ if (localStorage.getItem("currentMeetUser")) {
               <AppContainer
                 room={room}
                 user={user}
+                signOut={window.signOut}
                 buttons={buttonList.buttons}
                 signalList={signalList}
               />,
-              document.getElementById("meeting-plugin")
+              container
             );
+            render(room, user, buttonList, signalList, container);
 
             setup(user.email, room, signalList);
           });

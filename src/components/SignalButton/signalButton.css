@@ -4,20 +4,19 @@
   color: #333;
   width: 56px;
   height: 56px;
-  border-radius: 25px;
-  border: solid 1px silver;
   font-family: "Material Icons";
   font-style: normal;
   font-size: 24px;
   z-index: 100000000;
   text-align: center;
-  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 50%;
   margin: 8px 16px;
+  background-color: #fff;
+  border: solid 1px silver;
   position: relative;
   -webkit-transition: all 0.25s linear;
 }
@@ -31,7 +30,7 @@
   border-radius: 50%;
 }
 
-.reactionButton:hover .hoverPanel {
+.signalButton:hover .hoverPanel {
   background-color: rgba(0, 0, 0, 0.12);
   display: block;
   position: absolute;
