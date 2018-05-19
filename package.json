@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint src",
     "start": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
-    "build": "node_modules/.bin/webpack --config webpack.prod.config.js"
+    "build": "node_modules/.bin/webpack --config webpack.prod.config.js",
+    "start-app": "node_modules/.bin/webpack-dev-server --config webpack.app.config.js"
   },
   "repository": "https://github.com/noahlotzer/react-simple-boilerplate.git",
   "keywords": [
@@ -50,6 +51,7 @@
     "classnames": "^2.2.5",
     "firebase": "^4.13.1",
     "firebase-admin": "^5.12.0",
+    "firebaseui": "^3.0.0",
     "jquery": "^3.2.1",
     "mobx": "^4.2.0",
     "mobx-react": "^5.1.2",
