@@ -7,9 +7,12 @@ import MobileAppContainer from "./MobileAppContainer/MobileAppContainer.jsx";
 import SignalList from "../SignalList.js";
 import SignalButtonList from "../SignalButtonList.js";
 import SignalButton from "../SignalButton";
+import SignalService from "../SignalService.js";
 import UserSignal from "../UserSignal.js";
 import User from "../User";
 import moment from "moment";
+import MeetingRoom from "../MeetingRoom";
+import MeetingRoomList from "../MeetingRoomList";
 
 var config = {
   apiKey: "AIzaSyBVYw8O4NuxMRz63Jr9jmPyie3JF-x5x6M",
@@ -22,9 +25,40 @@ var config = {
 
 firebase.initializeApp(config);
 
-function render(rooms) {
+var db = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+db.settings(settings);
+
+let roomModel = new MeetingRoomList();
+roomModel.rooms = [];
+
+let signalList = new SignalList();
+let buttonList = new SignalButtonList();
+
+let service = new SignalService(db);
+buttonList.buttons = service.getSignalButtons();
+
+let globalUser = null;
+
+function onRoomSelection(room) {
+  roomModel.selectedRoom = room;
+
+  service
+    .deleteUserSignals(globalUser.email, room.id)
+    .then(() => service.setup(globalUser.email, room.id, signalList));
+}
+
+function render(user, roomList) {
   ReactDOM.render(
-    <MobileAppContainer rooms={rooms} />,
+    <MobileAppContainer
+      roomModel={roomModel}
+      onRoomSelection={onRoomSelection}
+      room={roomModel.selectedRoom}
+      user={user}
+      onSignOut={null}
+      buttonList={buttonList}
+      signalList={signalList}
+    />,
     document.getElementById("meeting-app")
   );
 }
@@ -34,7 +68,7 @@ function getCalendarEvents(accessToken, calendarId) {
     .startOf("day")
     .toISOString();
   const timeMax = moment()
-    .endOf("month")
+    .endOf("day")
     .toISOString();
 
   return fetch(
@@ -50,7 +84,10 @@ function getCalendarEvents(accessToken, calendarId) {
     .catch(error => console.error("Error:", error))
     .then(response => {
       return response.items.filter(event => event.conferenceData).map(event => {
-        return { name: event.summary, id: event.conferenceData.conferenceId };
+        return new MeetingRoom(
+          event.conferenceData.conferenceId,
+          event.summary
+        );
       });
     });
 }
@@ -59,6 +96,12 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 provider.addScope("email");
 provider.addScope("https://www.googleapis.com/auth/calendar.readonly");
+
+function removeDuplicates(myArr, prop) {
+  return myArr.filter((obj, pos, arr) => {
+    return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+  });
+}
 
 firebase
   .auth()
@@ -73,9 +116,15 @@ firebase
       user.photoUrl = result.user.photoURL;
       user.accessToken = result.credential.accessToken;
 
-      getCalendarEvents(user.accessToken, user.email).then(events =>
-        console.log(events)
-      );
+      globalUser = user;
+
+      render(user, roomModel);
+
+      getCalendarEvents(user.accessToken, user.email).then(events => {
+        let list = removeDuplicates(events, "id");
+
+        roomModel.rooms = list;
+      });
 
       localStorage.setItem("currentMeetUser", JSON.stringify(user));
     } else {

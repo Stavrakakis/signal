@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Room from "../Room.js";
 import { observer } from "mobx-react";
+import RoomItem from "../RoomItem/RoomItem.jsx";
 
 @observer
 class RoomList extends Component {
@@ -9,10 +10,16 @@ class RoomList extends Component {
   }
 
   render() {
+    const {rooms, onRoomClick} = this.props;
+
     return (
       <div>
-          {this.props.rooms.map(room => (
-          <div>{room.name} - {room.id}</div>
+        {rooms.map(room => (
+          <RoomItem
+            key={room.id}
+            room={room}
+            onRoomClick={onRoomClick}
+          />
         ))}
       </div>
     );

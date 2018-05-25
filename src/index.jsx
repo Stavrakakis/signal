@@ -7,7 +7,7 @@ import AppContainer from "./components/AppContainer/AppContainer.jsx";
 import SignalList from "./SignalList.js";
 import SignalButtonList from "./SignalButtonList.js";
 import SignalButton from "./SignalButton";
-import SignalButtonService from "./SignalButtonService";
+import SignalService from "./SignalService";
 import UserSignal from "./UserSignal.js";
 import User from "./User";
 
@@ -25,53 +25,6 @@ firebase.initializeApp(config);
 var db = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
-
-function deleteUserSignals(email, roomId) {
-  let batch = db.batch();
-
-  return db
-    .collection("reactions")
-    .where("user", "==", email)
-    .where("room", "==", roomId)
-    .get()
-    .then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        batch.delete(doc.ref);
-      });
-    })
-    .then(() => {
-      batch.commit();
-    });
-}
-function setup(email, roomId, signalList) {
-  let i = 0;
-  signalList.signals = [];
-
-  // setup listeners on reaction list
-  db
-    .collection("reactions")
-    .where("room", "==", roomId)
-    .orderBy("timestamp", "desc")
-    .onSnapshot(function(querySnapshot) {
-      querySnapshot.docChanges.forEach(function(change) {
-        let doc = change.doc;
-        let d = change.doc.data();
-        if (change.type === "added") {
-          signalList.signals.push(
-            new UserSignal(doc.id, d.type, d.room, d.photoUrl, d.email)
-          );
-        }
-        if (change.type === "removed") {
-          var remove = signalList.signals.filter(r => {
-            return r.id === doc.id;
-          });
-          remove.forEach(r => {
-            signalList.signals.remove(r);
-          });
-        }
-      });
-    });
-}
 
 function signOut() {
   var element = document.getElementById("meeting-plugin");
@@ -101,6 +54,7 @@ function render(room, user, buttonList, signalList, container) {
     container
   );
 }
+
 function signInWithGoogle() {
   var provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope("email");
@@ -147,15 +101,16 @@ function getUser() {
   let signalList = new SignalList();
   let buttonList = new SignalButtonList();
   
-  buttonList.buttons = new SignalButtonService().getSignalButtons();
+  let service = new SignalService(db);
+  buttonList.buttons = service.getSignalButtons();
 
   getUser()
     .then(u => {
       user = u;
-      deleteUserSignals(user.email, room);
+      service.deleteUserSignals(user.email, room);
     })
     .then(() => {
       render(room, user, buttonList, signalList, container);
-      setup(user.email, room, signalList);
+      service.setup(user.email, room, signalList);
     });
 })();
