@@ -2,15 +2,18 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
-  entry: { app: "./src/index.jsx" },
+  entry: {
+    desktop: "./src/index.jsx",
+    app: "./src/mobileApp/index.jsx"
+  },
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: "[name]-bundle.js"
+  },
   devtool: "source-map",
   devServer: {
     contentBase: "./dist",
     port: 9000
-  },
-  output: {
-    path: path.join(__dirname, "dist"),
-    filename: "bundle.js"
   },
   module: {
     loaders: [
