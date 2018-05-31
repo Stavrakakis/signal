@@ -5,17 +5,12 @@ install:
 - npm i
 cache:
   directories:
-    - "node_modules"
+  - node_modules
 script: npm run build
 deploy:
-  provider: s3
-  access_key_id: AKIAIQD37K7CTJZLWS4Q
-  secret_access_key:
-    secure: IDkUUJHofk5m1vkAX1SbA+Hbs6MSpxXmXSIH03fV/XgtNYGCG0847OTJomUNn0+0dEJn64859sEXY0fDzweeHlRtRUs8bKZVmwGH6K8dbTl29p7v0+33tb3u1bjIo9isEN/E8EygWgrtUDX02dJFmMJo4jIC/E7k2tJk0G9U4/PRUW0Uxm80G4xkWy/T4DwhhkVZm61xxesV5gvfGHBiJVt87joE04L2tH94AsglwuwN1tBxneKsmsqJsrnm/fn6b4zlWS3bGQD9cVkk7EPiw0MqFxf6swHE19radiv5h3IJW2GPGdyD4ewSChRrgwhYEbFYN12w8o42ruCOlHgGC8jwXFjPeJll70++cx8nXpJY37au7b0MzeC7d1NEfdxGS/SDox3F7R4RkK6fiiCkYiHpTXKxSQ61iCUYKTBZj6Y31b/XPzYV5G/bDVcV980iGG75z8RiXitxFEItqfT3iLh1EsvY4olz0Z4o0LiHROPGBgYz3FbztUmZmnJhyUtLiH2nq94fYNOLH6CwZg8ieXXqnOl0yS1AeEa7hiCQktZynY0DhvlHCnGGe05AvsjPcfHLd+Gh3J6875iDhsw3g5SaTjZHZvu3jONEpPFTj39+JGAxDGF6fufgAE2+a9Uh149yIOnzFCaxZFTO/mNJZd9r0E95C2+oy5JU3uQItsk=
-  bucket: static.secretescapes.com
-  local-dir: dist
-  upload-dir: meeting-app
-  acl: public_read
+  provider: firebase
+  token:
+    secure: JupBGDnSbveGZ4iFCOWTZV7dvbzE4/xoRO2zS1t6uc/smXkF9e3mi2YfSc4xcOGQzc3cRdhgWyNh5dUGEXGv2wMiVS8uImAumc3ma+up2JWuzoqxeQ+J7EY6gXAh2klYJxQsXyWhyRocSm21zaX5kfyop4P/MAZvna0SBaM6Cr12azRJPgdZohHfbJfOlJBu6fcdSx3Q8P5YTkWBumuPJJWFiIeEHXqqS262UpJ6Tdg588Z5kYyXfLnuCa7xZTd/ZzcoewcVDKIMghkIpduTygNLLarm/pLbZcUfWCbvZ8Z+Avy4MhKnDdkWTtC+RMwkboDSPSVTSiiK3WHsE1WUB4YLPHmxSpSXkpKZkQ/DWijhPlB11obO2z93FFLrXcqNNXHxyZ+GCiUz7nMMOH3stS2IOSbgkrP3A8NVhuYwX6xMYIk5kMUWFOcUSVQ1Lb5tXxSusmGBt7dtFQb4FWUwSLiGKu4MogNG6cW3bT0w2WLrp6a3hPYf/9COzwUXGgudQJWH4aVEP8mru4CHvcYATNv+d88v+YDQrqHSnt9P0MQczUPLhxtGlqB9ObMKYSSrfECVilgSmVOhtAoUkW99FouMpS/5Tf3pUT1Ixe3T7fsHr+SD3JcqBbps8GhQylIxpkI6R8xJb8Re+CX+elRyUouCmDdxbiImOG/s0ViXHS8=
   skip_cleanup: true
   on:
-    repo: Stavrakakis/signal
+    repo: Stavrakakis/signal    

@@ -6,7 +6,6 @@ module.exports = {
   devtool: "source-map",
   devServer: {
     contentBase: "./dist",
-    publicPath: "/build/",
     port: 9000
   },
   output: {
