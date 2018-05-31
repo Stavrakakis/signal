@@ -6,6 +6,7 @@
     "lint": "eslint src",
     "start": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
     "build": "node_modules/.bin/webpack --config webpack.prod.config.js",
+    "build-app": "node_modules/.bin/webpack --config webpack.prod.app.config.js",
     "start-app": "node_modules/.bin/webpack-dev-server --config webpack.app.config.js"
   },
   "repository": "https://github.com/noahlotzer/react-simple-boilerplate.git",
@@ -18,12 +19,12 @@
     "edit",
     "webpack"
   ],
-  "author": "Noah-Jerome Lotzer <noah.lotzer@gmail.com>",
+  "author": "Nico Stavrakakis <signal.plugin@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/noahlotzer/react-simple-boilerplate/issues"
+    "url": "https://github.com/Stavrakakis/signal/issues"
   },
-  "homepage": "https://github.com/noahlotzer/react-simple-boilerplate",
+  "homepage": "https://github.com/Stavrakakis/signal",
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",

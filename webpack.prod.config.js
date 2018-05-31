@@ -4,10 +4,13 @@ const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
   devtool: "source-map",
-  entry: ["./src/index.jsx"],
+  entry: {
+    desktop: "./src/index.jsx",
+    app: "./src/mobileApp/index.jsx"
+  },
   output: {
     path: path.join(__dirname, "dist"),
-    filename: "bundle.js"
+    filename: "[name]-bundle.js"
   },
   plugins: [
     new UglifyJSPlugin(),
