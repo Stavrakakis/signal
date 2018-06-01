@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Room from "../Room.js";
+import styles from "./roomItem.css"
 
 class RoomItem extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class RoomItem extends Component {
     const { room, onRoomClick } = this.props;
 
     return (
-      <div key={room.id} onClick={onRoomClick.bind(this, room)}>
+      <div className={styles.roomItem} key={room.id} onClick={onRoomClick.bind(this, room)}>
         {room.name}
       </div>
     );

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Room from "../Room.js";
 import { observer } from "mobx-react";
 import RoomItem from "../RoomItem/RoomItem.jsx";
+import styles from "./roomList.css";
 
 @observer
 class RoomList extends Component {
@@ -13,7 +14,7 @@ class RoomList extends Component {
     const {rooms, onRoomClick} = this.props;
 
     return (
-      <div>
+      <div className={styles.roomList}>
         {rooms.map(room => (
           <RoomItem
             key={room.id}
