@@ -4,6 +4,7 @@ import "@firebase/firestore";
 import React from "react";
 import ReactDOM from "react-dom";
 import MobileAppContainer from "./MobileAppContainer/MobileAppContainer.jsx";
+import LoadingIcon from "./LoadingIcon/LoadingIcon.jsx";
 import SignalList from "../SignalList.js";
 import SignalButtonList from "../SignalButtonList.js";
 import SignalButton from "../SignalButton";
@@ -13,6 +14,7 @@ import User from "../User";
 import moment from "moment";
 import MeetingRoom from "../MeetingRoom";
 import MeetingRoomList from "../MeetingRoomList";
+import template from "./app.html";
 
 var config = {
   apiKey: "AIzaSyBVYw8O4NuxMRz63Jr9jmPyie3JF-x5x6M",
@@ -103,6 +105,8 @@ function removeDuplicates(myArr, prop) {
   });
 }
 
+ReactDOM.render(<LoadingIcon />, document.getElementById("meeting-app"));
+
 firebase
   .auth()
   .getRedirectResult()
@@ -118,12 +122,12 @@ firebase
 
       globalUser = user;
 
-      render(user, roomModel);
-
       getCalendarEvents(user.accessToken, user.email).then(events => {
         let list = removeDuplicates(events, "id");
 
         roomModel.rooms = list;
+
+        render(user, roomModel);
       });
 
       localStorage.setItem("currentMeetUser", JSON.stringify(user));
