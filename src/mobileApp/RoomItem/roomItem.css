@@ -1,0 +1,7 @@
+.roomItem {
+  padding: 2rem;
+  font-size: 16px;
+  cursor: pointer;
+  background: aliceblue;
+  font-family: sans-serif;
+}
