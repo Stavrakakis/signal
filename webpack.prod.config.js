@@ -35,6 +35,13 @@ module.exports = {
           "style-loader",
           "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]"
         ]
+      },
+      {
+        test: /\.html$/,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]"
+        }
       }
     ]
   }
