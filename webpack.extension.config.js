@@ -3,7 +3,7 @@ var webpack = require("webpack");
 
 module.exports = {
   entry: {
-    inject: "./src/extension/inject.js",
+    content: "./src/extension/content.js",
     background: "./src/extension/background.js"
   },
   output: {

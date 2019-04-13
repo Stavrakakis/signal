@@ -4,6 +4,9 @@ import ReactDOM from "react-dom";
 import AppContainer from "../components/AppContainer/AppContainer.jsx";
 import SignalList from "../SignalList.js";
 import SignalButtonList from "../SignalButtonList.js";
+import icon48 from "./icon48.png";
+import icon128 from "./icon128.png";
+import manifest from "./manifest.json";
 
 function createContainer(id) {
   var div = document.createElement("div");
@@ -21,9 +24,7 @@ function render(room, user, buttonList, signalList, container) {
     <AppContainer
       room={room}
       user={user}
-      onSignOut={() => {
-        console.log("signout");
-      }}
+      onSignOut={signOut}
       buttons={buttonList.buttons}
       signalList={signalList}
       onNewSignal={onNewSignal}
@@ -31,6 +32,15 @@ function render(room, user, buttonList, signalList, container) {
     />,
     container
   );
+}
+
+function signOut() {
+  var element = document.getElementById("meeting-plugin");
+  console.log("sign out and remove react from page");
+
+  ReactDOM.unmountComponentAtNode(element);
+  element.remove();
+  chrome.extension.sendMessage({ type: "signout" }, function() {});
 }
 
 function onNewSignal(signal) {
@@ -107,16 +117,4 @@ function onRemoveSignal(signalId) {
     buttonList.buttons = signalButtons;
     render(room, user, buttonList, signalList, container);
   });
-  // let service = new SignalService(db);
-  // buttonList.buttons = service.getSignalButtons();
-
-  // getUser()
-  //   .then(user => {
-  //     service.deleteUserSignals(user.email, room);
-  //     return user;
-  //   })
-  //   .then(user => {
-  //     render(room, user, buttonList, signalList, container);
-  //     service.setup(user.email, room, signalList);
-  //   });
 })();

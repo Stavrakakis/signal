@@ -36,7 +36,6 @@ class SignalService {
   }
 
   setup(roomId) {
-    console.log(roomId);
     let self = this;
     // setup listeners on reaction list
 
@@ -55,12 +54,6 @@ class SignalService {
           }
           if (change.type === "removed") {
             self.onSignalRemovedHandler(doc.id);
-            // var remove = signalList.signals.filter(r => {
-            //   return r.id === doc.id;
-            // });
-            // remove.forEach(r => {
-            //   signalList.signals.remove(r);
-            // });
           }
         });
       });

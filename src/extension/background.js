@@ -23,14 +23,6 @@ let buttonList = new SignalButtonList();
 let service = new SignalService(db, onNewSignal, onSignalRemoved);
 buttonList.buttons = service.getSignalButtons();
 
-function signOut() {
-  var element = document.getElementById("meeting-plugin");
-  console.log("sign out and remove react from page");
-  localStorage.removeItem("currentMeetUser");
-  ReactDOM.unmountComponentAtNode(element);
-  element.remove();
-}
-
 function onNewSignal(signal) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(
@@ -115,9 +107,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, reply) {
   if (message.type == "initialize") {
     getUser().then(user => {
       let model = { user: user, signalButtons: service.getSignalButtons() };
+      service.deleteUserSignals(user.email, message.roomId);
       service.setup(message.roomId);
       reply(model);
     });
+  }
+  if (message.type == "signout") {
+    localStorage.removeItem("currentMeetUser");
   }
   if (message.type == "newsignal") {
     let signal = message.signal;
