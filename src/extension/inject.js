@@ -1,8 +1,122 @@
-// this is the code which will be injected into a given page...
+// Render the top-level React component
+import React from "react";
+import ReactDOM from "react-dom";
+import AppContainer from "../components/AppContainer/AppContainer.jsx";
+import SignalList from "../SignalList.js";
+import SignalButtonList from "../SignalButtonList.js";
+
+function createContainer(id) {
+  var div = document.createElement("div");
+  div.id = id;
+  div.style.zIndex = "9999999";
+  return div;
+}
+
+let signalList = new SignalList();
+let buttonList = new SignalButtonList();
+
+function render(room, user, buttonList, signalList, container) {
+  document.body.append(container);
+  ReactDOM.render(
+    <AppContainer
+      room={room}
+      user={user}
+      onSignOut={() => {
+        console.log("signout");
+      }}
+      buttons={buttonList.buttons}
+      signalList={signalList}
+      onNewSignal={onNewSignal}
+      onRemoveSignal={onRemoveSignal}
+    />,
+    container
+  );
+}
+
+function onNewSignal(signal) {
+  chrome.extension.sendMessage({ type: "newsignal", signal: signal }, function(
+    createdSignal
+  ) {
+    const button = buttonList.buttons.find(it => it.type == createdSignal.type);
+    if (button) {
+      button.active = true;
+      button.disabled = false;
+      button.reactionId = createdSignal.reactionId;
+    }
+  });
+}
+
+function onRemoveSignal(signalId) {
+  chrome.extension.sendMessage(
+    { type: "removeSignal", signalId: signalId },
+    function() {
+      const button = buttonList.buttons.find(it => it.reactionId == signalId);
+      if (button) {
+        button.active = false;
+        button.disabled = false;
+      }
+    }
+  );
+}
 
 (function() {
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "https://d1x3cbuht6sy0f.cloudfront.net/meeting-app/bundle.js";
-  document.head.appendChild(script);
+  let host = window.location.host;
+  let room =
+    host === "meet.google.com"
+      ? window.location.pathname.substring(1)
+      : host === "hangouts.google.com"
+      ? window.location.pathname.split("/").reverse()[0]
+      : "general";
+
+  let user = null;
+
+  const id = "meeting-plugin";
+
+  let container = createContainer(id);
+
+  chrome.runtime.onMessage.addListener(function(message, sender, reply) {
+    if (message.type == "signalCreated") {
+      signalList.signals.push(message.signal);
+      reply();
+    }
+
+    if (message.type == "signalDeleted") {
+      signalList.signals.remove(message.signal);
+      reply();
+    }
+
+    if (message.type == "signalRemoved") {
+      const { signalId } = message;
+      var remove = signalList.signals.filter(r => {
+        return r.id === signalId;
+      });
+      remove.forEach(r => {
+        signalList.signals.remove(r);
+      });
+      reply();
+    }
+
+    return true;
+  });
+
+  chrome.extension.sendMessage({ type: "initialize", roomId: room }, function(
+    model
+  ) {
+    const { user, signalButtons } = model;
+
+    buttonList.buttons = signalButtons;
+    render(room, user, buttonList, signalList, container);
+  });
+  // let service = new SignalService(db);
+  // buttonList.buttons = service.getSignalButtons();
+
+  // getUser()
+  //   .then(user => {
+  //     service.deleteUserSignals(user.email, room);
+  //     return user;
+  //   })
+  //   .then(user => {
+  //     render(room, user, buttonList, signalList, container);
+  //     service.setup(user.email, room, signalList);
+  //   });
 })();

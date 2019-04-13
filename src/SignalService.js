@@ -2,8 +2,10 @@ import SignalButton from "./SignalButton";
 import UserSignal from "./UserSignal";
 
 class SignalService {
-  constructor(db) {
+  constructor(db, onNewSignalHandler, onSignalRemovedHandler) {
     this.db = db;
+    this.onSignalRemovedHandler = onSignalRemovedHandler;
+    this.onNewSignalHandler = onNewSignalHandler;
   }
 
   getSignalButtons() {
@@ -33,11 +35,11 @@ class SignalService {
       });
   }
 
-  setup(email, roomId, signalList) {
-    let i = 0;
-    signalList.signals = [];
-
+  setup(roomId) {
+    console.log(roomId);
+    let self = this;
     // setup listeners on reaction list
+
     this.db
       .collection("reactions")
       .where("room", "==", roomId)
@@ -47,17 +49,18 @@ class SignalService {
           let doc = change.doc;
           let d = change.doc.data();
           if (change.type === "added") {
-            signalList.signals.push(
+            self.onNewSignalHandler(
               new UserSignal(doc.id, d.type, d.room, d.photoUrl, d.email)
             );
           }
           if (change.type === "removed") {
-            var remove = signalList.signals.filter(r => {
-              return r.id === doc.id;
-            });
-            remove.forEach(r => {
-              signalList.signals.remove(r);
-            });
+            self.onSignalRemovedHandler(doc.id);
+            // var remove = signalList.signals.filter(r => {
+            //   return r.id === doc.id;
+            // });
+            // remove.forEach(r => {
+            //   signalList.signals.remove(r);
+            // });
           }
         });
       });
