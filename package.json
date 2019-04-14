@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "eslint src",
     "start": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
-    "dev:extension": "node_modules/.bin/webpack --config webpack.extension-dev.config.js",
-    "build:extension": "node_modules/.bin/webpack --config webpack.extension-prod.config.js"
+    "dev:extension": "node_modules/.bin/webpack   --config webpack.extension-dev.config.js",
+    "build:extension": "node_modules/.bin/webpack --env.FIREBASE_KEY $FIREBASE_KEY --config webpack.extension-prod.config.js"
   },
   "repository": "https://github.com/noahlotzer/react-simple-boilerplate.git",
   "keywords": [
