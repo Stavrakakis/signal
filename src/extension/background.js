@@ -1,5 +1,6 @@
-import * as firebase from "firebase";
-import "@firebase/firestore";
+import * as firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/auth";
 import User from "../User";
 import SignalService from "../SignalService";
 import SignalButtonList from "../SignalButtonList.js";
