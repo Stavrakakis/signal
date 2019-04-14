@@ -18,22 +18,6 @@ function createContainer(id) {
 let signalList = new SignalList();
 let buttonList = new SignalButtonList();
 
-function render(room, user, buttonList, signalList, container) {
-  document.body.append(container);
-  ReactDOM.render(
-    <AppContainer
-      room={room}
-      user={user}
-      onSignOut={signOut}
-      buttons={buttonList.buttons}
-      signalList={signalList}
-      onNewSignal={onNewSignal}
-      onRemoveSignal={onRemoveSignal}
-    />,
-    container
-  );
-}
-
 function signOut() {
   var element = document.getElementById("meeting-plugin");
   console.log("sign out and remove react from page");
@@ -82,8 +66,6 @@ function onRemoveSignal(signalId) {
 
   const id = "meeting-plugin";
 
-  let container = createContainer(id);
-
   chrome.runtime.onMessage.addListener(function(message, sender, reply) {
     if (message.type == "signalCreated") {
       signalList.signals.push(message.signal);
@@ -115,6 +97,22 @@ function onRemoveSignal(signalId) {
     const { user, signalButtons } = model;
 
     buttonList.buttons = signalButtons;
-    render(room, user, buttonList, signalList, container);
+
+    let container = createContainer(id);
+
+    document.body.append(container);
+
+    ReactDOM.render(
+      <AppContainer
+        room={room}
+        user={user}
+        onSignOut={signOut}
+        buttons={buttonList.buttons}
+        signalList={signalList}
+        onNewSignal={onNewSignal}
+        onRemoveSignal={onRemoveSignal}
+      />,
+      container
+    );
   });
 })();

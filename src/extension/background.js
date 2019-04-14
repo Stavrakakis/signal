@@ -47,17 +47,17 @@ function getUser() {
   if (localStorage.getItem("currentMeetUser")) {
     let user = JSON.parse(localStorage.currentMeetUser);
     return new Promise((resolve, reject) => resolve(user));
-  } else {
-    return new Promise(function(resolve, reject) {
-      return getUserFromGoogle().then(function(result) {
-        var user = new User();
-        user.email = result.email;
-        user.photoUrl = result.photoUrl;
-        localStorage.setItem("currentMeetUser", JSON.stringify(user));
-        resolve(user);
-      });
-    });
   }
+
+  return new Promise(function(resolve, reject) {
+    return getUserFromGoogle().then(function(result) {
+      var user = new User();
+      user.email = result.email;
+      user.photoUrl = result.photoUrl;
+      localStorage.setItem("currentMeetUser", JSON.stringify(user));
+      resolve(user);
+    });
+  });
 }
 
 function getUserFromGoogle() {
@@ -103,31 +103,43 @@ function removeSignal(signalId) {
     .delete();
 }
 
-chrome.runtime.onMessage.addListener(function(message, sender, reply) {
+function initialise(message, reply) {
+  getUser().then(user => {
+    let model = { user: user, signalButtons: service.getSignalButtons() };
+    service.deleteUserSignals(user.email, message.roomId);
+    service.setup(message.roomId);
+    reply(model);
+  });
+}
+
+function newSignalHandler(message, reply) {
+  const { signal } = message;
+  newSignal(signal).then(function(createdSignal) {
+    reply(createdSignal);
+  });
+}
+
+function removeSignalHandler(message, reply) {
+  const { signalId } = message;
+  removeSignal(signalId).then(function() {
+    reply();
+  });
+}
+
+function contentScriptMessageHandler(message, sender, reply) {
   if (message.type == "initialize") {
-    getUser().then(user => {
-      let model = { user: user, signalButtons: service.getSignalButtons() };
-      service.deleteUserSignals(user.email, message.roomId);
-      service.setup(message.roomId);
-      reply(model);
-    });
+    initialise(message, reply);
   }
   if (message.type == "signout") {
     localStorage.removeItem("currentMeetUser");
   }
   if (message.type == "newsignal") {
-    let signal = message.signal;
-    newSignal(signal).then(function(createdSignal) {
-      reply(createdSignal);
-    });
+    newSignalHandler(message, reply);
   }
-
   if (message.type == "removeSignal") {
-    let signalId = message.signalId;
-    removeSignal(signalId).then(function() {
-      reply();
-    });
+    removeSignalHandler(message, reply);
   }
-
   return true;
-});
+}
+
+chrome.runtime.onMessage.addListener(contentScriptMessageHandler);
