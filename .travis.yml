@@ -7,10 +7,10 @@ cache:
   directories:
   - node_modules
 script: npm run build
-deploy:
-  provider: firebase
-  token:
-    secure: JupBGDnSbveGZ4iFCOWTZV7dvbzE4/xoRO2zS1t6uc/smXkF9e3mi2YfSc4xcOGQzc3cRdhgWyNh5dUGEXGv2wMiVS8uImAumc3ma+up2JWuzoqxeQ+J7EY6gXAh2klYJxQsXyWhyRocSm21zaX5kfyop4P/MAZvna0SBaM6Cr12azRJPgdZohHfbJfOlJBu6fcdSx3Q8P5YTkWBumuPJJWFiIeEHXqqS262UpJ6Tdg588Z5kYyXfLnuCa7xZTd/ZzcoewcVDKIMghkIpduTygNLLarm/pLbZcUfWCbvZ8Z+Avy4MhKnDdkWTtC+RMwkboDSPSVTSiiK3WHsE1WUB4YLPHmxSpSXkpKZkQ/DWijhPlB11obO2z93FFLrXcqNNXHxyZ+GCiUz7nMMOH3stS2IOSbgkrP3A8NVhuYwX6xMYIk5kMUWFOcUSVQ1Lb5tXxSusmGBt7dtFQb4FWUwSLiGKu4MogNG6cW3bT0w2WLrp6a3hPYf/9COzwUXGgudQJWH4aVEP8mru4CHvcYATNv+d88v+YDQrqHSnt9P0MQczUPLhxtGlqB9ObMKYSSrfECVilgSmVOhtAoUkW99FouMpS/5Tf3pUT1Ixe3T7fsHr+SD3JcqBbps8GhQylIxpkI6R8xJb8Re+CX+elRyUouCmDdxbiImOG/s0ViXHS8=
-  skip_cleanup: true
-  on:
-    repo: Stavrakakis/signal    
+# deploy:
+#   provider: firebase
+#   token:
+#     secure: JupBGDnSbveGZ4iFCOWTZV7dvbzE4/xoRO2zS1t6uc/smXkF9e3mi2YfSc4xcOGQzc3cRdhgWyNh5dUGEXGv2wMiVS8uImAumc3ma+up2JWuzoqxeQ+J7EY6gXAh2klYJxQsXyWhyRocSm21zaX5kfyop4P/MAZvna0SBaM6Cr12azRJPgdZohHfbJfOlJBu6fcdSx3Q8P5YTkWBumuPJJWFiIeEHXqqS262UpJ6Tdg588Z5kYyXfLnuCa7xZTd/ZzcoewcVDKIMghkIpduTygNLLarm/pLbZcUfWCbvZ8Z+Avy4MhKnDdkWTtC+RMwkboDSPSVTSiiK3WHsE1WUB4YLPHmxSpSXkpKZkQ/DWijhPlB11obO2z93FFLrXcqNNXHxyZ+GCiUz7nMMOH3stS2IOSbgkrP3A8NVhuYwX6xMYIk5kMUWFOcUSVQ1Lb5tXxSusmGBt7dtFQb4FWUwSLiGKu4MogNG6cW3bT0w2WLrp6a3hPYf/9COzwUXGgudQJWH4aVEP8mru4CHvcYATNv+d88v+YDQrqHSnt9P0MQczUPLhxtGlqB9ObMKYSSrfECVilgSmVOhtAoUkW99FouMpS/5Tf3pUT1Ixe3T7fsHr+SD3JcqBbps8GhQylIxpkI6R8xJb8Re+CX+elRyUouCmDdxbiImOG/s0ViXHS8=
+#   skip_cleanup: true
+#   on:
+#     repo: Stavrakakis/signal    
