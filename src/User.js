@@ -1,10 +1,8 @@
-import { observable } from "mobx";
-
 class User {
-  @observable email;
-  @observable photoUrl;
-  @observable signedIn;
-  @observable accessToken;
+  email;
+  photoUrl;
+  signedIn;
+  accessToken;
 }
 
 export default User;
