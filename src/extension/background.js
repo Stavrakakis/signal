@@ -6,7 +6,7 @@ import SignalService from "../SignalService";
 import SignalButtonList from "../SignalButtonList.js";
 
 var config = {
-  apiKey: "AIzaSyBVYw8O4NuxMRz63Jr9jmPyie3JF-x5x6M",
+  apiKey: FIREBASE_KEY,
   authDomain: "meet-f3f8c.firebaseapp.com",
   databaseURL: "https://meet-f3f8c.firebaseio.com",
   projectId: "meet-f3f8c",

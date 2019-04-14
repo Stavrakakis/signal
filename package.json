@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint src",
     "start": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
-    "dev:extension": "node_modules/.bin/webpack --config webpack.extension-dev.config.js",
+    "dev:extension": "node_modules/.bin/webpack  --env.FIREBASE_KEY AIzaSyBVYw8O4NuxMRz63Jr9jmPyie3JF-x5x6M --config webpack.extension-dev.config.js",
     "build:extension": "node_modules/.bin/webpack --config webpack.extension-prod.config.js"
   },
   "repository": "https://github.com/noahlotzer/react-simple-boilerplate.git",
@@ -39,6 +39,7 @@
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.3.1",
+    "webpack-env-loader": "^0.1.1",
     "webpack-material-design-icons": "^0.1.0"
   },
   "dependencies": {
